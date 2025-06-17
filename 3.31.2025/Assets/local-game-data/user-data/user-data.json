@@ -1,1 +1,25 @@
-{}
+{
+    "levelEntries": [
+        {
+            "levelName": "Level1",
+            "surveyData": {
+                "selectedWrongAnswers": [
+                    "6",
+                    "2"
+                ]
+            }
+        },
+        {
+            "levelName": "Level2",
+            "surveyData": {
+                "selectedWrongAnswers": []
+            }
+        },
+        {
+            "levelName": "Level3",
+            "surveyData": {
+                "selectedWrongAnswers": []
+            }
+        }
+    ]
+}
