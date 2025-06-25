@@ -2,13 +2,11 @@ using UnityEngine;
 
 public class ClickButtonActivator : MonoBehaviour
 {
-    public GameObject congratulationsMessage;
+
     public GameObject dataFile;
 
     private void Start()
     {
-        if (congratulationsMessage != null)
-            congratulationsMessage.SetActive(false);
 
         if (dataFile != null)
             dataFile.SetActive(false);
@@ -33,12 +31,9 @@ public class ClickButtonActivator : MonoBehaviour
 
     private void ActivateObjects()
     {
-        if (congratulationsMessage != null)
-            congratulationsMessage.SetActive(true);
-
         if (dataFile != null)
             dataFile.SetActive(true);
 
-        Debug.Log("Object clicked – displaying message and data.");
+        Debug.Log("Object clicked – displaying data.");
     }
 }
