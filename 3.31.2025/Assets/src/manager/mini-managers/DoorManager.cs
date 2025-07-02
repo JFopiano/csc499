@@ -117,7 +117,10 @@ public class DoorManager {
         switch (levelPrefix) {
             case "Level2":
                 // Check if Level 1 is solved and the survey is correctly answered before allowing Level 2 doors to open.
-                if(!gameManager.level1Solved || !gameManager.correctlyAnsweredLevel1) {
+                if(!gameManager.level1Solved
+                    // || !gameManager.correctlyAnsweredLevel1
+                    ) {
+                    Debug.Log("[DoorManager Stopped Level 2] " + levelPrefix + " CA: " + gameManager.correctlyAnsweredLevel2 + " LS: " + gameManager.level1Solved);
                     // If conditions are not met, do nothing (door remains closed or in its current state).
                     return; // Changed from break to return to prevent animation if conditions fail.
                 }
@@ -135,7 +138,9 @@ public class DoorManager {
                 break;
             case "Level3":
                 // Check if Level 2 is solved and the survey is correctly answered.
-                if(!gameManager.level2Solved || !gameManager.correctlyAnsweredLevel2) {
+                if(!gameManager.level2Solved
+                //    || !gameManager.correctlyAnsweredLevel2
+                    ) {
                     Debug.Log("[DoorManager Stopped Level 3] " + levelPrefix + " CA: " + gameManager.correctlyAnsweredLevel2 + " LS: " + gameManager.level2Solved);
                     return; // Changed from break to return.
                 }
@@ -153,7 +158,9 @@ public class DoorManager {
                 break;
             case "Level4":
                 // Check if Level 3 is solved and the survey is correctly answered.
-                if(!gameManager.level3Solved || !gameManager.correctlyAnsweredLevel3) {
+                if(!gameManager.level3Solved
+                    // || !gameManager.correctlyAnsweredLevel3
+                    ) {
                     return; // Changed from break to return.
                 }
                 // Invert the open states for Level 4 doors.
