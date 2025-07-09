@@ -183,8 +183,8 @@ public class GameManager : MonoBehaviour {
 
         gameControlManager.toggleMovement(true); // Enable player movement initially (might be overridden shortly after)
         // Pre-create SVM instances for the first two levels
-        svmManager.createLevel1SVM();
-        svmManager.createLevel2SVM();
+        // svmManager.createLevel1SVM();
+        // svmManager.createLevel2SVM();
 
         // Set the initial task text to the starting message
         taskPopupManager.setTaskTextByState(TaskPopupManager.TaskPopupState.START);
