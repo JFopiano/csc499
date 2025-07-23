@@ -1,253 +1,222 @@
-# Machine Learning VR Game
+# Data Science VR Game
 
 ## Overview
+This virtual reality game, developed in Unity, provides an immersive educational experience focused on teaching Data Science. Players progress through a school environment with various rooms (levels), solving lessons crafted with a linear progression on how to learn key takeaways about data science.
 
-This Virtual Reality game, developed in Unity, provides an immersive educational experience focused on teaching Support Vector Machine (SVM) learning algorithms. Players progress through a school environment with various rooms (levels), solving machine learning challenges to advance.
+---
 
 ## Game Structure
+- Players begin in a school environment  
+- Progression through 4 levels (with level 5 in development)  
+- Each level contains Data Science related concepts to complete  
+- Post-level questionnaires assess understanding  
+- Doors open to new levels upon successful completion  
 
-- Players begin in a school environment
-- Progression through 4 levels (with level 5 in development)
-- Each level contains SVM-related puzzles to solve
-- Post-level questionnaires assess understanding
-- Doors open to new levels upon successful completion
+---
 
 ## Level Breakdown
+1. **Level 1**: Introduction to basic controls/import your dataset (CSV file)  
+2. **Level 2**: Data preprocessing (how to handle NaNs)  
+3. **Level 3**: Univariate models  
+4. **Level 4**: Bivariate models  
+5. **Level 5**: Heatmaps *(in development)*  
+6. **Level 6**: Scatter Plots  
+7. **Level 7**: *(potential)* Analysis with and without outliers  
 
-1. **Level 1**: Introduction to basic SVM concepts
-2. **Level 2**: SVM with outliers
-3. **Level 3**: More complex decision boundaries
-4. **Level 4**: Dynamic SVM creation using the Iris dataset
-5. **Level 5**: In development
+---
 
-## Iris Dataset
+## Breast Cancer Dataset
+The game uses the **Breast Cancer Wisconsin (Diagnostic)** dataset. Players analyze the following columns:
 
-The game uses the famous Iris flower dataset (Iris.csv) to dynamically create SVMs in Level 4. Players can select features and species to visualize different decision boundaries.
+- `radius` (mean of distances from center to points on the perimeter)  
+- `texture` (standard deviation of gray-scale values)  
+- `perimeter`  
+- `area`  
+- `smoothness` (local variation in radius lengths)  
+- `compactness` (perimeter² / area - 1.0)  
+- `concavity` (severity of concave portions of the contour)  
+- `concave points` (number of concave portions of the contour)  
+- `symmetry`  
+- `fractal dimension` ("coastline approximation" - 1)  
+
+---
 
 ## Technical Implementation
 
 ### Core Architecture
+The game follows a **manager-based architecture** with a central `GameManager` coordinating various specialized mini-managers.
 
-The game follows a manager-based architecture with a central GameManager coordinating various specialized mini-managers.
+---
 
-### Key Components
+## Key Components
 
-#### GameManager (`src/manager/GameManager.cs`)
+### `GameManager` (`src/manager/GameManager.cs`)
+- Central hub managing game state and player progression  
+- Coordinates all mini-managers  
+- Initializes level-specific SVMs  
+- Tracks player progression through levels  
+- Handles VR controller interactions  
 
-- Central hub managing game state and player progression
-- Coordinates all mini-managers
-- Initializes level-specific SVMs
-- Tracks player progression through levels
-- Handles VR controller interactions
+---
 
-#### SVMManager (`src/manager/mini-managers/SVMManager.cs`)
+### Mini-Managers
+- **ArrowManager**: Guides player movement with visual cues  
+- **DoorManager**: Controls door states for level progression  
+- **TaskPopupManager**: Manages in-game task instructions  
+- **UserDataManager**: Tracks player progress and survey responses  
+- **SurveyManager**: Handles assessment questionnaires  
 
-- Core ML implementation
-- Creates and manages SVM instances for different levels
-- Handles hyperplane visualization and support vector positioning
-- Implements Level 4's dynamic SVM creation using the Iris dataset
-- Provides normalization and simple SVM training functionality
+---
 
-#### Mini-Managers
+### Interactive Components (`src/scripts/`)
+- **SolverButtons**: Implements level-specific solution buttons  
+- **CreateSVMButtonScript**: Handles dynamic SVM creation in Level 4  
+- **DecisionPlaneControlsScript**: Controls for manipulating decision boundaries  
+- **StartButtonScript**: Handles game initialization  
 
-- **ArrowManager**: Guides player movement with visual cues
-- **DoorManager**: Controls door states for level progression
-- **TaskPopupManager**: Manages in-game task instructions
-- **UserDataManager**: Tracks player progress and survey responses
-- **SurveyManager**: Handles assessment questionnaires
+---
 
-#### Interactive Components (`src/scripts/`)
+## Data Management
+Player progress and survey responses are persisted across sessions using **JSON serialization**.
 
-- **SolverButtons**: Implements level-specific solution buttons
-- **CreateSVMButtonScript**: Handles dynamic SVM creation in Level 4
-- **DecisionPlaneControlsScript**: Controls for manipulating decision boundaries
-- **StartButtonScript**: Handles game initialization
-
-### Data Management
-
-The game persists user data using JSON serialization, tracking progress and survey responses across sessions.
+---
 
 ## VR Implementation
+- Built using **Unity's XR Interaction Toolkit**  
+- Supports **left-hand task hologram** for convenient instruction viewing  
+- Implements intuitive VR interactions with game elements  
 
-- Built using Unity's XR Interaction Toolkit
-- Supports left-hand task hologram for convenient instruction viewing
-- Implements intuitive VR interactions with SVMs and game elements
+---
 
 ## Future Development
+- Level 5 implementation *(in progress)*  
+- Level 6 implementation  
+- Potentially level 7 implementation  
+- Enhanced visualization techniques  
+- End-of-class surveys that reflect the lesson plan for each classroom  
 
-- Level 5 implementation (in progress)
-- Additional ML algorithms
-- Enhanced visualization techniques
+---
 
 ## Detailed Component Documentation
 
 ### GameManager
+The `GameManager` serves as the **central orchestrator**, managing game state and coordinating all subsystems.
 
-The GameManager serves as the central orchestrator for the entire application, managing game state and coordinating all subsystems.
+#### Responsibilities
+- Initializes and manages all mini-managers (`initManagers()`)  
+- Tracks player progression with boolean flags  
+- Handles VR controller input (`CheckSecondaryButtonPressedOnLeftController()`)  
+- Manages task hologram display  
+- Controls player movement via `GameControlManager`  
+- Coordinates level transitions and arrow systems  
 
-**Key Responsibilities:**
+#### Key Methods
+- `startGame()`: Begins gameplay and level 1 arrows  
+- `keepTryingToPutTaskHologramInPlayerLeftHand()`: Keeps task display with player  
+- `Start()`: Initializes SVMs and game state  
+- `Update()`: Monitors input to toggle task popup  
 
-- Initializes and manages all mini-managers through the `initManagers()` method
-- Tracks player progression with boolean flags for each level (entered, solved, correctly answered)
-- Handles VR controller input via `CheckSecondaryButtonPressedOnLeftController()`
-- Manages the task hologram attached to the player's left hand
-- Controls player movement enablement via the GameControlManager
-- Coordinates level transitions and arrow guidance systems
-
-**Key Methods:**
-
-- `startGame()`: Initiates gameplay, enables movement, and starts Level 1 arrow sequences
-- `keepTryingToPutTaskHologramInPlayerLeftHand()`: Coroutine ensuring the task display follows the player
-- `Start()`: Initializes SVMs for the first two levels and sets up the initial game state
-- `Update()`: Monitors for controller input to toggle task popup visibility
-
-### SVMManager
-
-The SVMManager implements the core machine learning functionality, particularly focusing on SVM visualization and interaction.
-
-**Key Components:**
-
-- `SVMInstance` class: Represents individual SVM visualizations with hyperplanes and support vectors
-- `SupportVectorPosition` class: Stores positional data for support vectors in the visualization
-- `SupportVectorInteraction` class: Handles user interaction with support vectors in VR
-
-**Key Features:**
-
-- Predefined SVM setups for Levels 1-3 with appropriate data points
-- Dynamic SVM creation for Level 4 using the Iris dataset
-- Support for feature selection and species filtering in Level 4
-- Simple SVM training implementation using gradient descent
-- Data normalization to fit visualization space
-
-**Key Methods:**
-
-- `createLevel1SVM()`, `createLevel2SVM()`: Set up predefined SVMs with support vectors
-- `createLevel4SVM()`: Creates dynamic SVMs based on selected Iris dataset features
-- `SolveLevel4SVM()`: Implements the solving algorithm for Level 4
-- `TrainSVM()`: Basic SVM training implementation using gradient descent
-- `NormalizeValue()`: Handles data normalization for visualization
+---
 
 ### Mini-Managers
 
 #### ArrowManager
+- Guides players with sequential arrow lighting  
+- Different sequences per level  
+- Feedback for direction and goals  
 
-Manages guidance arrows that help players navigate through the VR environment.
-
-**Key Features:**
-
-- Sequential lighting of arrows to guide player progression
-- Different arrow sequences for each level
-- Visual feedback to indicate direction and next objectives
-
-**Key Methods:**
-
-- `startLevel1ArrowLightingSequence()` through `startLevel4ArrowLightingSequence()`: Initiates arrow guidance for respective levels
-- `stopLevelNArrowLightingSequence()`: Terminates arrow sequences when objectives are completed
+**Key Methods**:  
+- `startLevel1ArrowLightingSequence()` to `startLevel4ArrowLightingSequence()`  
+- `stopLevelNArrowLightingSequence()`  
 
 #### DoorManager
-
-Controls the state of doors that gate progress between levels.
-
-**Key Features:**
-
-- Door locking/unlocking based on level completion and survey results
-- Visual feedback for door states (locked/unlocked)
-- Progression control through physical barriers
+- Locks/unlocks doors based on level completion and surveys  
+- Visual feedback for door state  
+- Physical progression gates  
 
 #### TaskPopupManager
+- Displays context-sensitive task instructions  
+- Toggles visibility  
+- Uses `TaskPopupState` enum for updates  
+- VR-friendly UI placement  
 
-Handles the display of task instructions and feedback to the player.
-
-**Key Features:**
-
-- Context-sensitive task text based on game state
-- Toggle functionality for task visibility
-- State-based text updates via `TaskPopupState` enum
-- VR-friendly UI positioning
-
-**Key Method:**
-
-- `setTaskTextByState()`: Updates task text based on the current game state/level
+**Key Method**:  
+- `setTaskTextByState()`: Updates instructions  
 
 #### UserDataManager
+- Tracks and serializes player data (JSON)  
+- Records wrong answers in surveys  
+- Saves data across sessions  
 
-Manages persistent player data, particularly focusing on survey responses.
+**Key Classes**:  
+- `LevelSurveyData`, `SerializableLevelEntry`, `SerializableLevelsData`  
 
-**Key Features:**
-
-- JSON serialization of player progress data
-- Tracking of wrong answer selections in surveys
-- File I/O for data persistence across sessions
-
-**Key Classes:**
-
-- `LevelSurveyData`: Stores wrong answers and calculates attempts
-- `SerializableLevelEntry` and `SerializableLevelsData`: Support JSON serialization
-
-**Key Methods:**
-
-- `saveUserData()`: Persists player data to disk
-- `addWrongAnswerToLevelSurvey()`: Records incorrect survey responses
+**Key Methods**:  
+- `saveUserData()`  
+- `addWrongAnswerToLevelSurvey()`  
 
 #### SurveyManager
+- Handles post-level questionnaires  
+- Multiple choice validation and feedback  
+- Unlocks levels based on performance  
 
-Handles the questionnaires presented after each level.
-
-**Key Features:**
-
-- Multiple-choice questions related to SVM concepts
-- Answer validation and feedback
-- Progression control based on correct answers
-- Data recording for player performance analysis
+---
 
 ### Interactive Components
 
 #### SolverButtons
+- Implements solutions with correct SVM setup  
+- Adjusts decision planes per level  
+- Triggers level completion  
 
-Implements the solution buttons for each level that apply the correct SVM configuration.
-
-**Key Features:**
-
-- Level-specific solution implementations
-- Transformation of decision planes to the correct orientation
-- Level completion triggering and state updates
-- Special handling for Level 3's deformable plane
-
-**Key Method:**
-
-- `OnUIButtonClicked()`: Contains level-specific solution logic triggered by button presses
+**Key Method**:  
+- `OnUIButtonClicked()`: Level-specific logic  
 
 #### CreateSVMButtonScript
+- Reads dropdown input  
+- Maps features and classes  
+- Creates dynamic SVMs via `SVMManager`  
 
-Handles the dynamic creation of SVMs in Level 4 based on user selections.
-
-**Key Features:**
-
-- Reads dropdown selections for features and species
-- Maps selection text to enum values
-- Positions and configures the decision plane
-- Invokes SVMManager to create the appropriate SVM visualization
-
-**Key Method:**
-
-- `OnUIButtonClicked()`: Processes user selections and creates a custom SVM
+**Key Method**:  
+- `OnUIButtonClicked()`  
 
 #### DecisionPlaneControlsScript
-
-Provides interactive controls for manipulating decision boundaries.
-
-**Key Features:**
-
-- VR-friendly manipulation of hyperplane position and orientation
-- Real-time feedback on classification changes
-- Interactive learning through direct manipulation
+- VR-friendly plane adjustment  
+- Real-time feedback  
+- Encourages interactive learning  
 
 #### StartButtonScript
+- Starts game from menu  
+- Triggers `GameManager`  
+- Begins arrow guidance  
 
-Initializes game state when the player begins the experience.
+---
 
-**Key Features:**
-
-- Triggers game initialization via GameManager
-- Enables player movement and interaction
-- Begins the first guidance arrow sequence
+## Table of Contents
+- Data Science VR Game  
+- Overview  
+- Game Structure  
+- Level Breakdown  
+- Breast Cancer Dataset  
+- Technical Implementation  
+  - Core Architecture  
+  - Key Components  
+    - GameManager  
+    - Mini-Managers  
+    - Interactive Components  
+- Data Management  
+- VR Implementation  
+- Future Development  
+- Detailed Component Documentation  
+  - GameManager  
+  - Mini-Managers  
+    - ArrowManager  
+    - DoorManager  
+    - TaskPopupManager  
+    - UserDataManager  
+    - SurveyManager  
+  - Interactive Components  
+    - SolverButtons  
+    - CreateSVMButtonScript  
+    - DecisionPlaneControlsScript  
+    - StartButtonScript  
